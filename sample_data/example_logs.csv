@@ -1,0 +1,6 @@
+timestamp,model,prompt,input_tokens,output_tokens,latency,request_id,retry_count
+2026-03-01T12:00:00Z,gpt-4o,"Summarize the following article: ...",1200,80,1.2,req_001,0
+2026-03-01T12:00:05Z,gpt-4o,"Classify sentiment: I love this product",12,6,0.4,req_002,0
+2026-03-01T12:00:10Z,claude-sonnet,"Extract entities from text: ...",500,40,0.9,req_003,1
+2026-03-01T12:00:15Z,gemini-pro,"Write a short function to parse CSV",30,25,0.7,req_004,0
+2026-03-01T12:00:20Z,gpt-4o,"Long system prompt: [SYSTEM MESSAGE...] \nUser: What's the idea?",4000,30,1.8,req_005,2
