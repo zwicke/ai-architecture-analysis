@@ -5,7 +5,6 @@ import io
 from collections import Counter
 
 # --- Internal Module Imports ---
-# Ensure these folders and __init__.py files are in your GitHub repo
 from utils.data_loader import load_and_validate_csv
 from classifiers.task_classifier import classify_batch
 import detectors.model_overkill as model_overkill
@@ -22,41 +21,88 @@ st.set_page_config(
 )
 
 # --- Navigation Tabs ---
-tab_overview, tab_audit = st.tabs(["📄 Strategic Overview", "📊 Live Audit Dashboard"])
+tab_about, tab_use = st.tabs(["📄 Learn About the Tool", "📊 Use the Tool"])
 
-# --- TAB 1: STRATEGIC OVERVIEW ---
-with tab_overview:
+# --- TAB 1: LEARN ABOUT THE TOOL ---
+with tab_about:
     st.title("🏗️ AI Architecture Efficiency Analyzer")
     st.markdown("---")
     
-    st.header("What This Tool Does")
+    # Section 1
+    st.subheader("What This Tool Does")
     st.write("""
-    The **AI Architecture Efficiency Analyzer** is a diagnostic platform for understanding the economic performance of your AI architecture.
+    The AI Architecture Efficiency Analyzer is a diagnostic platform for understanding the economic performance of your AI architecture.
     
-    As AI adoption accelerates, organizations are rapidly accumulating an invisible cost center: the **Inflexibility Tax**. This is the margin erosion that occurs when a 'Ferrari-class' model is used for a 'bicycle-class' problem. The Analyzer audits production AI logs to expose these inefficiencies and provide a clear diagnostic of how efficiently your organization is deploying intelligence.
+    As AI adoption accelerates across the enterprise, organizations are rapidly accumulating an invisible new cost center: the architecture layer that determines how intelligence is allocated across tasks. In most systems, high-frontier models are routinely deployed for workloads that require only basic reasoning—creating hidden structural inefficiencies.
+    
+    The result is what we call the **Inflexibility Tax**: the margin erosion that occurs when AI systems lack the routing, sizing, and orchestration needed to match the right level of intelligence to each task.
+    
+    **In simple terms, it’s the cost of using a Ferrari-class model for a bicycle-class problem.**
+    
+    The Analyzer audits production AI usage logs to expose these inefficiencies. It identifies where architectural choices—such as model selection, context allocation, retry patterns, and agent design—are inflating costs without improving outcomes.
+    
+    The result is a clear diagnostic of how efficiently your organization is deploying intelligence.
     """)
 
-    st.header("From Cost Monitoring to AI Architecture Governance")
+    # Section 2
+    st.subheader("From Cost Monitoring to AI Architecture Governance")
     st.write("""
-    Traditional FinOps tools focus on tracking spend. **This Analyzer focuses on *why* the spend exists in the first place.** By analyzing task routing, the platform surfaces structural inefficiencies and provides a roadmap for right-sizing the AI stack.
+    Traditional FinOps tools focus on tracking spend. The AI Architecture Efficiency Analyzer instead focuses on **why the spend exists in the first place.**
+    
+    By analyzing how tasks are routed across models and workloads, the platform surfaces structural inefficiencies and provides a roadmap for right-sizing the AI stack—using smaller models, dynamic routing, and leaner context strategies where appropriate.
+    
+    This transforms AI infrastructure from a reactive cost center into a governable strategic system.
     """)
 
-    st.header("Sustainability-Adjusted ROI")
+    # Section 3
+    st.subheader("Sustainability-Adjusted ROI")
     st.write("""
-    Beyond direct cost savings, the platform introduces a **Sustainability-Adjusted ROI** metric. Architectural efficiency reduces the energy intensity of AI workloads, quantifying both **Financial savings** and **Carbon avoidance**.
+    Beyond direct cost savings, the platform introduces a **Sustainability-Adjusted ROI metric.**
+    
+    Architectural efficiency does not only reduce API costs—it also reduces the energy intensity of AI workloads. By estimating the carbon footprint of model usage and highlighting opportunities to shift to lighter-weight models, the Analyzer quantifies both:
+    """)
+    st.markdown("""
+    * **Financial savings**
+    * **Carbon avoidance**
+    """)
+    st.write("""
+    For leadership teams, this enables a **Total Value narrative** that aligns AI operations with both profitability and ESG commitments.
     """)
 
     st.markdown("---")
-    col_use, col_val = st.columns(2)
-    with col_use:
-        st.subheader("How to Use")
-        st.markdown("1. **Upload Logs** | 2. **Automated Analysis** | 3. **Strategic Audit**")
-    with col_val:
-        st.subheader("Why It Delivers Value")
-        st.success("**Margin Recovery** | **ESG Transparency** | **Procurement Leverage**")
 
-# --- TAB 2: AUDIT DASHBOARD (Merged Logic) ---
-with tab_audit:
+    # Section 4
+    col_how, col_why = st.columns(2)
+    
+    with col_how:
+        st.subheader("How to Use the Analyzer")
+        st.markdown("""
+        The platform is designed for a zero-configuration audit, moving from raw data to executive insights in three steps.
+
+        **1. Upload Production Logs**
+        Upload a CSV export of AI usage containing model names, prompt/response tokens, and retry counts.
+
+        **2. Automated Task Analysis**
+        The system analyzes each request to determine its task profile (e.g., summarization, extraction, reasoning) and evaluates whether the selected model was appropriately sized.
+
+        **3. Strategic Audit Generation**
+        The dashboard calculates your Inflexibility Tax, highlights architectural inefficiencies, and generates a roadmap for margin recovery through improved model routing and stack optimization.
+        """)
+
+    with col_why:
+        st.subheader("Why It Delivers Value")
+        
+        st.markdown("#### 💰 Margin Recovery")
+        st.write("Identify immediate opportunities to route routine workloads to efficient models (Mini / Flash) without sacrificing quality.")
+        
+        st.markdown("#### 🌱 ESG Transparency")
+        st.write("Quantify the carbon footprint of inefficient AI architecture and provide empirical data for sustainability reporting.")
+        
+        st.markdown("#### ⚖️ Procurement Leverage")
+        st.write("Reveal vendor pricing gaps and dependency risks, giving leadership data to negotiate contracts or diversify model providers.")
+
+# --- TAB 2: USE THE TOOL ---
+with tab_use:
     st.header("Strategic Audit Dashboard")
     
     with st.sidebar:
@@ -64,69 +110,51 @@ with tab_audit:
         uploaded = st.file_uploader("Upload Production Logs", type=["csv"])
 
     if uploaded:
-        with st.spinner("Processing Analytics Engine Locally..."):
+        with st.spinner("Processing AI Governance Audit..."):
             try:
-                # 1. Load Data
+                # Engine Execution
                 df = load_and_validate_csv(io.BytesIO(uploaded.getvalue()))
-                
-                # 2. Enrichment & Task Classification
                 prompts = df['prompt'].astype(str).tolist()
                 classifications = classify_batch(prompts)
                 
-                # 3. Financials
                 total_cost = estimate_total_cost(df)
                 optimized = estimate_optimized_cost(df)
                 
-                # 4. Diagnostic Detectors
                 findings = []
                 detector_modules = [model_overkill, token_bloat, carbon_footprint, model_arbitrage]
                 for mod in detector_modules:
-                    try:
-                        findings += mod.detect(df, classifications)
-                    except Exception as e:
-                        st.warning(f"Detector {mod.__name__} encountered a non-critical error.")
+                    try: findings += mod.detect(df, classifications)
+                    except: continue
 
-                # 5. Summary Stats
+                # Summary Logic
                 total_co2 = float(df['co2_grams'].sum()) if 'co2_grams' in df.columns else 0.0
-                carbon_avoidance_val = (total_co2 * 0.45) * 0.00005 
+                carbon_val = (total_co2 * 0.45) * 0.00005 
                 direct_savings = max(0.0, total_cost - optimized)
-                total_recovery = direct_savings + carbon_avoidance_val
+                total_recovery = direct_savings + carbon_val
 
-                # --- RENDER METRICS ---
+                # Metrics
                 m1, m2, m3, m4 = st.columns(4)
                 m1.metric("Total Requests", f"{len(df):,}")
                 m2.metric("Current Spend", f"${total_cost:,.4f}")
-                roi_pct = (total_recovery / total_cost * 100) if total_cost > 0 else 0
-                m3.metric("Strategic Value Recovery", f"${total_recovery:,.2f}", delta=f"{roi_pct:.1f}% Adj. ROI")
+                m3.metric("Total Strategic Value", f"${total_recovery:,.2f}", delta="Sustainability Adjusted")
                 m4.metric("Carbon Footprint", f"{total_co2:.1f}g CO2e", delta="ESG Impact")
 
                 st.divider()
 
-                # --- VISUALIZATIONS ---
-                c_left, c_right = st.columns(2)
-                with c_left:
-                    task_counts = Counter([c['task_type'] for c in classifications])
-                    task_df = pd.DataFrame.from_dict(task_counts, orient='index', columns=['count']).reset_index()
-                    st.plotly_chart(px.pie(task_df, values='count', names='index', title='Workload Distribution', hole=0.4), use_container_width=True)
-                with c_right:
-                    model_counts = df['model'].value_counts().to_dict()
-                    model_df = pd.DataFrame.from_dict(model_counts, orient='index', columns=['count']).reset_index()
-                    st.plotly_chart(px.bar(model_df, x='index', y='count', title='Model Utilization', color='index'), use_container_width=True)
-
-                # --- FINDINGS ---
-                st.subheader("Diagnostic Audit Findings")
+                # Findings Render
+                st.subheader("Diagnostic Findings")
                 for f in findings:
                     with st.expander(f"⚠️ {f.get('title')} (Impact: {f.get('affected_requests')} Requests)"):
-                        c_tech, c_strat = st.columns(2)
-                        with c_tech:
+                        c_t, c_s = st.columns(2)
+                        with c_t:
                             st.markdown("**🛠️ Technical Root Cause**")
-                            st.write(f.get('technical_analysis', "Detailed technical logs processed."))
-                        with c_strat:
+                            st.write(f.get('technical_analysis'))
+                        with c_s:
                             st.markdown("**📈 Strategic Impact**")
-                            st.write(f.get('description', "Assessing organizational impact."))
+                            st.write(f.get('description'))
                         st.info(f"**Executive Recommendation:** {f.get('recommendation')}")
 
             except Exception as e:
-                st.error(f"Critical Engine Error: {e}")
+                st.error(f"Engine Error: {e}")
     else:
-        st.info("👈 Please upload your production logs in the sidebar to begin.")
+        st.info("👈 Please upload your logs in the sidebar to begin the live audit.")
