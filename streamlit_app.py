@@ -21,7 +21,7 @@ st.set_page_config(
 )
 
 # --- Navigation Tabs ---
-tab_about, tab_use = st.tabs(["📄 Learn About the Tool", "📊 Use the Tool"])
+tab_about, tab_use = st.tabs(["📄 Learn about the Tool", "📊 Use the Tool"])
 
 # --- TAB 1: LEARN ABOUT THE TOOL ---
 with tab_about:
